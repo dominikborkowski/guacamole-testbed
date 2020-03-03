@@ -1,0 +1,84 @@
+version: '3'
+services:
+
+  ubuntu-14.04:
+    container_name: 'ubuntu-14.04'
+    build: ./ubuntu-14.04/
+    ports:
+      - "127.0.0.1:14389:3389"
+    restart: unless-stopped
+    depends_on:
+      - guacd
+    networks:
+      guacnetwork:
+
+  ubuntu-16.04:
+    container_name: 'ubuntu-16.04'
+    build: ./ubuntu-16.04/
+    ports:
+      - "127.0.0.1:16389:3389"
+    restart: unless-stopped
+    depends_on:
+      - guacd
+    networks:
+      guacnetwork:
+
+  ubuntu-18.04:
+    container_name: 'ubuntu-18.04'
+    build: ./ubuntu-18.04/
+    ports:
+      - "127.0.0.1:18389:3389"
+    restart: unless-stopped
+    depends_on:
+      - guacd
+    networks:
+      guacnetwork:
+
+  guacamole:
+    container_name: 'guacamole'
+    image: guacamole/guacamole:1.1.0
+    ports:
+      - "127.0.0.1:8080:8080"
+    restart: unless-stopped
+    environment:
+      GUACD_HOSTNAME: guacd
+      POSTGRES_HOSTNAME: postgres
+      POSTGRES_DATABASE: ${POSTGRES_DB:-guac_db}
+      POSTGRES_USER: ${POSTGRES_USER:-guac_db_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-guac_db_password}
+    depends_on:
+      - postgres
+      - guacd
+    networks:
+      guacnetwork:
+      guacdb:
+
+  guacd:
+    container_name: 'guacd'
+    image: guacamole/guacd:1.1.0
+    restart: unless-stopped
+    environment:
+      GUACD_LOG_LEVEL: debug
+    networks:
+      guacnetwork:
+
+  postgres:
+    container_name: 'postgres'
+    build: .
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-guac_db}
+      POSTGRES_USER: ${POSTGRES_USER:-guac_db_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-guac_db_password}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      guacdb:
+
+volumes:
+  db_data:
+    driver: local
+
+networks:
+  guacnetwork:
+  guacdb:
