@@ -6,6 +6,7 @@ services:
     build: ./ubuntu-14.04/
     ports:
       - "127.0.0.1:14389:3389"
+      # - "127.0.0.1:3389:3389"
     restart: unless-stopped
     depends_on:
       - guacd
