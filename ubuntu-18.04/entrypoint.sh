@@ -3,7 +3,7 @@
 echo '[Logging]' >> /etc/xrdp/xrdp.ini
 echo 'LogLevel=DEBUG' >> /etc/xrdp/xrdp.ini
 
-xrdp-keygen xrdp /etc/xrdp/rsakeys.ini
+xrdp-keygen xrdp auto
 
 /usr/sbin/xrdp-sesman --nodaemon &
 sleep 1
