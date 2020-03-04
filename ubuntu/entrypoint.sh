@@ -11,7 +11,7 @@ if ! grep -q ^ubuntu /etc/passwd; then
 fi
 
 # enable debug logging for xrdp
-if ! grep -q LogLevel /etc/xrdp/ini; then
+if ! grep -q LogLevel /etc/xrdp/xrdp.ini; then
     echo '[Logging]' >> /etc/xrdp/xrdp.ini
     echo 'LogLevel=DEBUG' >> /etc/xrdp/xrdp.ini
 fi
