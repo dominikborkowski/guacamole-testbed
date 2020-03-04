@@ -1,17 +1,24 @@
 #!/bin/bash -ex
 
-# set up student user
-addgroup --gid 999 student
-useradd -m -u 999 -s /bin/bash -g student student
-echo 'student:$1$HQ0IICOH$TMl3CWh6xP/EipmQMYUHn1' | /usr/sbin/chpasswd -e
-echo 'student ALL=(ALL) ALL' >> /etc/sudoers
+# create user 'ubuntu' with password 'ubuntu'
+# different password can be produced by: $(openssl passwd -1 'PASSWORD_HERE')
+if ! grep -q ^ubuntu /etc/passwd; then
+    addgroup --gid 1000 ubuntu
+    useradd -m -u 1000 -s /bin/bash -g ubuntu ubuntu
+    echo 'ubuntu:$1$ke6ANMsy$IMwFu5kYAnrsUyKs93EYV1' | /usr/sbin/chpasswd -e
+    # make sure group ubuntu can login to xrdp
+    sed -i '/^TerminalServerUsers/s/tsusers/ubuntu/' /etc/xrdp/sesman.ini
+fi
 
-# enable debug logging for xrdp
-echo '[Logging]' >> /etc/xrdp/xrdp.ini
-echo 'LogLevel=DEBUG' >> /etc/xrdp/xrdp.ini
+if ! grep -q LogLevel /etc/xrdp/ini; then
+    echo '[Logging]' >> /etc/xrdp/xrdp.ini
+    echo 'LogLevel=DEBUG' >> /etc/xrdp/xrdp.ini
+fi
 
 # generate xrdp keys
-xrdp-keygen xrdp auto
+ if [ ! -s /etc/xrdp/rsakeys.ini ]; then
+    xrdp-keygen xrdp auto
+fi
 
 # start xrdp components and tail the logs
 /usr/sbin/xrdp-sesman --nodaemon &
