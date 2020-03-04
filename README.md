@@ -4,6 +4,8 @@ The goal of this environment is to quickly stand up three versions of Guacamole 
 
 The idea is to perform a comparison between two tagged releases of guacamole versions, and the latest source, to identify any potential issues.
 
+_Relevant bug report_: https://issues.apache.org/jira/browse/GUACAMOLE-962
+
 ## Setup
 
 * Place relevant 'previous' and 'new' version numbers in `.env` file in the main directory. Eg:
@@ -30,15 +32,15 @@ docker-compose up
 ## Testing
 
 * Navigate to one of the three versions of guacamole:
-    * previous (1.0): http://localhost:8080/guacamole/#/
-    * new (1.1): http://localhost:8081/guacamole/#/
-    * latest git: http://localhost:8082/guacamole/#/
+    * **previous**: http://localhost:8080/guacamole/#/
+    * **new**: http://localhost:8081/guacamole/#/
+    * **latest git**: http://localhost:8082/guacamole/#/
 * Login as **guacadmin** with password **guacadmin**
 * You will have three versions of ubuntu as pre-configured connections. If things work correctly, you will be prompted with a login window
 * Try logging in as user **ubuntu** with password **ubuntu**, with the default xrdp module:
-    * Ubuntu 18.04: **Xorg**
+    * Ubuntu 14.04: **sesman-Xvnc** (_actual session is not working at the moment_)
     * Ubuntu 16.04: **sesman-Xvnc**
-    * Ubuntu 14.04: **sesman-Xvnc**
+    * Ubuntu 18.04: **Xorg**
 
 Problems with RDP will be apparent right away, and guacamole will not be able to connect to some systems. For example Guacamole 1.1.0 won't be able to connect to Ubuntu 14.04 and 16.04.
 
