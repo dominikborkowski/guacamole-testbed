@@ -35,7 +35,10 @@ docker-compose up
     * latest git: http://localhost:8082/guacamole/#/
 * Login as **guacadmin** with password **guacadmin**
 * You will have three versions of ubuntu as pre-configured connections. If things work correctly, you will be prompted with a login window
-* Try logging in as user **ubuntu** with password **ubuntu**, with **sesman-X11rdp** module (or **X11rdp**)
+* Try logging in as user **ubuntu** with password **ubuntu**, with the default xrdp module:
+    * Ubuntu 18.04: **Xorg**
+    * Ubuntu 16.04: **sesman-Xvnc**
+    * Ubuntu 14.04: **sesman-Xvnc**
 
 Problems with RDP will be apparent right away, and guacamole will not be able to connect to some systems. For example Guacamole 1.1.0 won't be able to connect to Ubuntu 14.04 and 16.04.
 
@@ -44,11 +47,11 @@ Problems with RDP will be apparent right away, and guacamole will not be able to
 
 We have a total of **three** test containers, and **nine** service ones:
 
-* previous guacamole (1.0)
+* previous guacamole
     * guacamole-previous - http://localhost:8080/guacamole/#/
     * guacd-previous
     * postgres-previous
-* new guacamole - (1.1) - http://localhost:8081/guacamole/#/
+* new guacamole - http://localhost:8081/guacamole/#/
     * guacamole-new
     * guacd-new
     * postgres-new
@@ -56,10 +59,10 @@ We have a total of **three** test containers, and **nine** service ones:
     * guacamole-git
     * guacd-git
     * postgres-git
-* three test clients
-    * ubuntu-14.04
-    * ubuntu-16.04
-    * ubuntu-18.04
+* three test clients with the following RDP integrations:
+    * ubuntu-14.04, linuxvnc
+    * ubuntu-16.04, vnc4server
+    * ubuntu-18.04, xorgrdp
 
 ### Default settings
 
@@ -73,32 +76,20 @@ We have a total of **three** test containers, and **nine** service ones:
 
 ## Manual tests
 
-From your host machine:
+If you have `xfreerdp` client installed on your host machine, you can directly connect to xrdp service on one of the Ubuntu containers with the following syntax:
 
 ```
 xfreerdp /v:localhost:PORT_NUMBER /relax-order-checks +glyph-cache
 ```
 
-Where PORT_NUMBER is:
+Where **PORT_NUMBER** is:
 
-* ubuntu-14.04
-    * 14389
-* ubuntu-16.04
-    * 16389
-* ubuntu-18.04
-    * 18389
+* ubuntu-14.04: `14389`
+* ubuntu-16.04: `16389`
+* ubuntu-18.04: `18389`
 
 ## Database manipulation
 
-Once logged into guacamole interface at
-* stand up entire stack with docker-compose
-```
-docker compose up
-```
-* enter existing container
-```
-docker exec -it <container> sh
-```
 * connect to postgres
 ```
 psql -U guac_db_user guac_db

@@ -10,6 +10,7 @@ services:
       context: ./ubuntu/
       args:
         UBUNTU_VERSION: 14.04
+        RDP_PACKAGE: linuxvnc
     ports:
       - "127.0.0.1:14389:3389"
     restart: unless-stopped
@@ -24,6 +25,7 @@ services:
       context: ./ubuntu/
       args:
         UBUNTU_VERSION: 16.04
+        RDP_PACKAGE: vnc4server
     ports:
       - "127.0.0.1:16389:3389"
     restart: unless-stopped
@@ -38,6 +40,7 @@ services:
       context: ./ubuntu/
       args:
         UBUNTU_VERSION: 18.04
+        RDP_PACKAGE: xorgrdp
     ports:
       - "127.0.0.1:18389:3389"
     restart: unless-stopped
