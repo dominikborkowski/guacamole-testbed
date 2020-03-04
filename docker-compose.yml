@@ -6,7 +6,6 @@ services:
     build: ./ubuntu-14.04/
     ports:
       - "127.0.0.1:14389:3389"
-      # - "127.0.0.1:3389:3389"
     restart: unless-stopped
     depends_on:
       - guacd
@@ -54,9 +53,20 @@ services:
       guacnetwork:
       guacdb:
 
+  # # specific version of guacd
+  # guacd:
+  #   container_name: 'guacd'
+  #   image: guacamole/guacd:1.1.0
+  #   restart: unless-stopped
+  #   environment:
+  #     GUACD_LOG_LEVEL: debug
+  #   networks:
+  #     guacnetwork:
+
+  # guacd built from latest upstream source
   guacd:
     container_name: 'guacd'
-    image: guacamole/guacd:1.1.0
+    build: ./guacamole-server/
     restart: unless-stopped
     environment:
       GUACD_LOG_LEVEL: debug
