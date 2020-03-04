@@ -95,7 +95,7 @@ services:
 
   guacamole-git:
     container_name: 'guacamole-git'
-    image: guacamole/guacamole:1.1.0
+    build: ./guacamole-client/
     ports:
       - "127.0.0.1:8082:8080"
     restart: unless-stopped
