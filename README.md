@@ -1,34 +1,34 @@
-# Testing glyph problems with guacamole
+# Test bed for guacamole
 
 The following set of containers provides a test environment for testing guacamole.
 
 ## setup
 
+* Pull latest `guacamole-server` repo and stand up the entire stack
+
 ```
+git submodule update --init
 docker-compose up
 ```
 
-* Login as 'guacadmin'/'guacadmin' at http://localhost:8080
-* Configure several new connections:
+* Navigate to  http://localhost:8080
+* Login as **guacadmin** with password **guacadmin**
 
-All of them will need the following config options set:
+## What's included
 
-* Protocol: RDP
-* Ignore server certificate: yes
-* Port: 3389
+We have a total of **five** containers:
 
-* ubuntu-14.04
-    * hostname: ubuntu-14.04
-* ubuntu-16.04
-    * hostname: ubuntu-16.04
-* ubuntu-18.04
-    * hostname: ubuntu-18.04
+* guacamole client
+* guacamole server/proxy
+* postgres
+* three test clients
+    * ubuntu-14.04
+    * ubuntu-16.04
+    * ubuntu-18.04
 
-
-### manual tests
+## Manual tests
 
 From your host machine:
-
 
 ```
 xfreerdp /v:localhost:PORT_NUMBER /relax-order-checks +glyph-cache
@@ -43,7 +43,22 @@ Where PORT_NUMBER is:
 * ubuntu-18.04
     * 18389
 
-
-## new connections
+## Database manipulation
 
 Once logged into guacamole interface at
+* stand up entire stack with docker-compose
+```
+docker compose up
+```
+* enter existing container
+```
+docker exec -it <container> sh
+```
+* connect to postgres
+```
+psql -U guac_db_user guac_db
+```
+* dumping entire database:
+```
+pg_dumpall -U guac_db_user > original_db.sql
+```
