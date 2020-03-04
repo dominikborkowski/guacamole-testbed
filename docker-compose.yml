@@ -6,14 +6,13 @@ services:
 
   ubuntu-14.04:
     container_name: 'ubuntu-14.04'
-    build: ./ubuntu-14.04/
+    build:
+      context: ./ubuntu/
+      args:
+        UBUNTU_VERSION: 14.04
     ports:
       - "127.0.0.1:14389:3389"
     restart: unless-stopped
-    # depends_on:
-    #   - guacd-previous
-    #   - guacd-new
-    #   - guacd-git
     networks:
       guacnetwork-previous:
       guacnetwork-new:
@@ -21,14 +20,13 @@ services:
 
   ubuntu-16.04:
     container_name: 'ubuntu-16.04'
-    build: ./ubuntu-16.04/
+    build:
+      context: ./ubuntu/
+      args:
+        UBUNTU_VERSION: 16.04
     ports:
       - "127.0.0.1:16389:3389"
     restart: unless-stopped
-    # depends_on:
-    #   - guacd-previous
-    #   - guacd-new
-    #   - guacd-git
     networks:
       guacnetwork-previous:
       guacnetwork-new:
@@ -36,18 +34,18 @@ services:
 
   ubuntu-18.04:
     container_name: 'ubuntu-18.04'
-    build: ./ubuntu-18.04/
+    build:
+      context: ./ubuntu/
+      args:
+        UBUNTU_VERSION: 18.04
     ports:
       - "127.0.0.1:18389:3389"
     restart: unless-stopped
-    # depends_on:
-    #   - guacd-previous
-    #   - guacd-new
-    #   - guacd-git
     networks:
       guacnetwork-previous:
       guacnetwork-new:
       guacnetwork-git:
+
 # end test clients
 ##############################################################################
 

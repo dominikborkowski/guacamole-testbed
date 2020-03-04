@@ -1,8 +1,6 @@
 ARG GUAC_VERSION
 FROM guacamole/guacamole:${GUAC_VERSION:-1.0.0} as guac_client
 
-LABEL maintainer="Dominik L. Borkowski"
-
 # generate initial schema from our guacamole client
 RUN /opt/guacamole/bin/initdb.sh --postgres >> /tmp/guacamole-initdb.sql
 

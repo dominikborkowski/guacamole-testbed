@@ -1,6 +1,7 @@
-FROM ubuntu:16.04
+ARG UBUNTU_VERSION
+FROM ubuntu:${UBUNTU_VERSION:-14.04}
 
-# compile and clean
+# install xrdp
 RUN apt-get update && \
     apt-get install -y xrdp && \
     rm -rf /var/lib/apt/lists/*
