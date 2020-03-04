@@ -10,10 +10,10 @@ services:
     ports:
       - "127.0.0.1:14389:3389"
     restart: unless-stopped
-    depends_on:
-      - guacd-previous
-      - guacd-new
-      - guacd-git
+    # depends_on:
+    #   - guacd-previous
+    #   - guacd-new
+    #   - guacd-git
     networks:
       guacnetwork-previous:
       guacnetwork-new:
@@ -25,10 +25,10 @@ services:
     ports:
       - "127.0.0.1:16389:3389"
     restart: unless-stopped
-    depends_on:
-      - guacd-previous
-      - guacd-new
-      - guacd-git
+    # depends_on:
+    #   - guacd-previous
+    #   - guacd-new
+    #   - guacd-git
     networks:
       guacnetwork-previous:
       guacnetwork-new:
@@ -40,10 +40,10 @@ services:
     ports:
       - "127.0.0.1:18389:3389"
     restart: unless-stopped
-    depends_on:
-      - guacd-previous
-      - guacd-new
-      - guacd-git
+    # depends_on:
+    #   - guacd-previous
+    #   - guacd-new
+    #   - guacd-git
     networks:
       guacnetwork-previous:
       guacnetwork-new:
@@ -57,7 +57,7 @@ services:
 
   guacamole-previous:
     container_name: 'guacamole-previous'
-    image: guacamole/guacamole:1.0.0
+    image: guacamole/guacamole:${PREVIOUS:-1.0.0}
     ports:
       - "127.0.0.1:8080:8080"
     restart: unless-stopped
@@ -76,7 +76,7 @@ services:
 
   guacamole-new:
     container_name: 'guacamole-new'
-    image: guacamole/guacamole:1.1.0
+    image: guacamole/guacamole:${NEW:-1.1.0}
     ports:
       - "127.0.0.1:8081:8080"
     restart: unless-stopped
@@ -121,7 +121,7 @@ services:
   # specific version of guacd
   guacd-previous:
     container_name: 'guacd-previous'
-    image: guacamole/guacd:1.0.0
+    image: guacamole/guacd:${PREVIOUS:-1.0.0}
     restart: unless-stopped
     environment:
       GUACD_LOG_LEVEL: debug
@@ -131,7 +131,7 @@ services:
   # specific version of guacd
   guacd-new:
     container_name: 'guacd-new'
-    image: guacamole/guacd:1.1.0
+    image: guacamole/guacd:${NEW:-1.0.0}
     restart: unless-stopped
     environment:
       GUACD_LOG_LEVEL: debug
@@ -156,7 +156,10 @@ services:
 
   postgres-previous:
     container_name: 'postgres-previous'
-    build: .
+    build:
+      context: ./postgres/
+      args:
+        GUAC_VERSION: ${PREVIOUS:-1.0.0}
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-guac_db}
@@ -169,7 +172,10 @@ services:
 
   postgres-new:
     container_name: 'postgres-new'
-    build: .
+    build:
+      context: ./postgres/
+      args:
+        GUAC_VERSION: ${NEW:-1.1.0}
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-guac_db}
@@ -182,7 +188,10 @@ services:
 
   postgres-git:
     container_name: 'postgres-git'
-    build: .
+    build:
+      context: ./postgres/
+      args:
+        GUAC_VERSION: ${NEW:-1.1.0}
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-guac_db}
@@ -196,6 +205,8 @@ services:
 # end guacamole databases
 ##############################################################################
 
+##############################################################################
+# start volumes and networks
 
 volumes:
   db_data-previous:
@@ -210,3 +221,6 @@ networks:
   guacnetwork-new:
   guacnetwork-git:
   guacdb:
+
+# end of volumes and networks
+##############################################################################
