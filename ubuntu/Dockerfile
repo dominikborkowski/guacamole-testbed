@@ -3,7 +3,7 @@ FROM ubuntu:${UBUNTU_VERSION:-14.04}
 
 # install xrdp
 RUN apt-get update && \
-    apt-get install -y xrdp && \
+    apt-get install -y xrdp xterm && \
     rm -rf /var/lib/apt/lists/*
 
 COPY entrypoint.sh /root/entrypoint.sh

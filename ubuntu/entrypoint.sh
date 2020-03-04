@@ -10,9 +10,15 @@ if ! grep -q ^ubuntu /etc/passwd; then
     sed -i '/^TerminalServerUsers/s/tsusers/ubuntu/' /etc/xrdp/sesman.ini
 fi
 
+# enable debug logging for xrdp
 if ! grep -q LogLevel /etc/xrdp/ini; then
     echo '[Logging]' >> /etc/xrdp/xrdp.ini
     echo 'LogLevel=DEBUG' >> /etc/xrdp/xrdp.ini
+fi
+
+# run basic xterm for our rdp session
+if ! grep -q xterm /etc/xrdp/startwm.sh; then
+    echo xterm >> /etc/xrdp/startwm.sh
 fi
 
 # generate xrdp keys
