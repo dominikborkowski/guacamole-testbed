@@ -7,4 +7,5 @@ RUN /opt/guacamole/bin/initdb.sh --postgres >> /tmp/guacamole-initdb.sql
 
 # prepare a new postgres container
 FROM postgres:12-alpine
-COPY --from=guac_client ./tmp/guacamole-initdb.sql /docker-entrypoint-initdb.d/guacamole-initdb.sql
+COPY --from=guac_client ./tmp/guacamole-initdb.sql /docker-entrypoint-initdb.d/10-guacamole-initdb.sql
+COPY ./test-connections.sql /docker-entrypoint-initdb.d/20-test-connections.sql
