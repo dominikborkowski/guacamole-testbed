@@ -1,4 +1,5 @@
-FROM guacamole/guacamole:1.0.0 as guac_client
+ARG GUAC_VERSION
+FROM guacamole/guacamole:${GUAC_VERSION:-1.0.0} as guac_client
 
 LABEL maintainer="Dominik L. Borkowski"
 
