@@ -8,19 +8,32 @@ The following set of containers provides a test environment for testing guacamol
 
 ```
 git submodule update --init
+docker-compose build
 docker-compose up
 ```
 
-* Navigate to  http://localhost:8080
+* Navigate to one of the three versions of guacamole:
+    * previous (1.0): http://localhost:8080/guacamole/#/
+    * new (1.1): http://localhost:8081/guacamole/#/
+    * latest git: http://localhost:8082/guacamole/#/
 * Login as **guacadmin** with password **guacadmin**
 
 ## What's included
 
-We have a total of **five** containers:
+We have a total of **three** test containers, and **nine** service ones:
 
-* guacamole client
-* guacamole server/proxy
-* postgres
+* previous guacamole (1.0)
+    * guacamole-previous - http://localhost:8080/guacamole/#/
+    * guacd-previous
+    * postgres-previous
+* new guacamole - (1.1) - http://localhost:8081/guacamole/#/
+    * guacamole-new
+    * guacd-new
+    * postgres-new
+* git guacamole (latest git) - http://localhost:8082/guacamole/#/
+    * guacamole-git
+    * guacd-git
+    * postgres-git
 * three test clients
     * ubuntu-14.04
     * ubuntu-16.04

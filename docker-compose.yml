@@ -1,6 +1,9 @@
 version: '3'
 services:
 
+##############################################################################
+# start test clients
+
   ubuntu-14.04:
     container_name: 'ubuntu-14.04'
     build: ./ubuntu-14.04/
@@ -8,9 +11,13 @@ services:
       - "127.0.0.1:14389:3389"
     restart: unless-stopped
     depends_on:
-      - guacd
+      - guacd-previous
+      - guacd-new
+      - guacd-git
     networks:
-      guacnetwork:
+      guacnetwork-previous:
+      guacnetwork-new:
+      guacnetwork-git:
 
   ubuntu-16.04:
     container_name: 'ubuntu-16.04'
@@ -19,9 +26,13 @@ services:
       - "127.0.0.1:16389:3389"
     restart: unless-stopped
     depends_on:
-      - guacd
+      - guacd-previous
+      - guacd-new
+      - guacd-git
     networks:
-      guacnetwork:
+      guacnetwork-previous:
+      guacnetwork-new:
+      guacnetwork-git:
 
   ubuntu-18.04:
     container_name: 'ubuntu-18.04'
@@ -30,51 +41,121 @@ services:
       - "127.0.0.1:18389:3389"
     restart: unless-stopped
     depends_on:
-      - guacd
+      - guacd-previous
+      - guacd-new
+      - guacd-git
     networks:
-      guacnetwork:
+      guacnetwork-previous:
+      guacnetwork-new:
+      guacnetwork-git:
+# end test clients
+##############################################################################
 
-  guacamole:
-    container_name: 'guacamole'
-    image: guacamole/guacamole:1.1.0
+
+##############################################################################
+# start guacamole front-ends
+
+  guacamole-previous:
+    container_name: 'guacamole-previous'
+    image: guacamole/guacamole:1.0.0
     ports:
       - "127.0.0.1:8080:8080"
     restart: unless-stopped
     environment:
-      GUACD_HOSTNAME: guacd
-      POSTGRES_HOSTNAME: postgres
+      GUACD_HOSTNAME: guacd-previous
+      POSTGRES_HOSTNAME: postgres-previous
       POSTGRES_DATABASE: ${POSTGRES_DB:-guac_db}
       POSTGRES_USER: ${POSTGRES_USER:-guac_db_user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-guac_db_password}
     depends_on:
-      - postgres
-      - guacd
+      - postgres-previous
+      - guacd-previous
     networks:
-      guacnetwork:
+      guacnetwork-previous:
       guacdb:
 
-  # # specific version of guacd
-  # guacd:
-  #   container_name: 'guacd'
-  #   image: guacamole/guacd:1.1.0
-  #   restart: unless-stopped
-  #   environment:
-  #     GUACD_LOG_LEVEL: debug
-  #   networks:
-  #     guacnetwork:
+  guacamole-new:
+    container_name: 'guacamole-new'
+    image: guacamole/guacamole:1.1.0
+    ports:
+      - "127.0.0.1:8081:8080"
+    restart: unless-stopped
+    environment:
+      GUACD_HOSTNAME: guacd-new
+      POSTGRES_HOSTNAME: postgres-new
+      POSTGRES_DATABASE: ${POSTGRES_DB:-guac_db}
+      POSTGRES_USER: ${POSTGRES_USER:-guac_db_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-guac_db_password}
+    depends_on:
+      - postgres-new
+      - guacd-new
+    networks:
+      guacnetwork-new:
+      guacdb:
+
+  guacamole-git:
+    container_name: 'guacamole-git'
+    image: guacamole/guacamole:1.1.0
+    ports:
+      - "127.0.0.1:8082:8080"
+    restart: unless-stopped
+    environment:
+      GUACD_HOSTNAME: guacd-git
+      POSTGRES_HOSTNAME: postgres-git
+      POSTGRES_DATABASE: ${POSTGRES_DB:-guac_db}
+      POSTGRES_USER: ${POSTGRES_USER:-guac_db_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-guac_db_password}
+    depends_on:
+      - postgres-git
+      - guacd-git
+    networks:
+      guacnetwork-git:
+      guacdb:
+
+# end guacamole front-ends
+##############################################################################
+
+##############################################################################
+# start guacamole back-ends
+
+  # specific version of guacd
+  guacd-previous:
+    container_name: 'guacd-previous'
+    image: guacamole/guacd:1.0.0
+    restart: unless-stopped
+    environment:
+      GUACD_LOG_LEVEL: debug
+    networks:
+      guacnetwork-previous:
+
+  # specific version of guacd
+  guacd-new:
+    container_name: 'guacd-new'
+    image: guacamole/guacd:1.1.0
+    restart: unless-stopped
+    environment:
+      GUACD_LOG_LEVEL: debug
+    networks:
+      guacnetwork-new:
 
   # guacd built from latest upstream source
-  guacd:
-    container_name: 'guacd'
+  guacd-git:
+    container_name: 'guacd-git'
     build: ./guacamole-server/
     restart: unless-stopped
     environment:
       GUACD_LOG_LEVEL: debug
     networks:
-      guacnetwork:
+      guacnetwork-git:
 
-  postgres:
-    container_name: 'postgres'
+# end guacamole back-ends
+##############################################################################
+
+##############################################################################
+# start guacamole databases
+
+  postgres-previous:
+    container_name: 'postgres-previous'
     build: .
     restart: unless-stopped
     environment:
@@ -82,14 +163,50 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-guac_db_user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-guac_db_password}
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - db_data-previous:/var/lib/postgresql/data
     networks:
       guacdb:
 
+  postgres-new:
+    container_name: 'postgres-new'
+    build: .
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-guac_db}
+      POSTGRES_USER: ${POSTGRES_USER:-guac_db_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-guac_db_password}
+    volumes:
+      - db_data-new:/var/lib/postgresql/data
+    networks:
+      guacdb:
+
+  postgres-git:
+    container_name: 'postgres-git'
+    build: .
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-guac_db}
+      POSTGRES_USER: ${POSTGRES_USER:-guac_db_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-guac_db_password}
+    volumes:
+      - db_data-git:/var/lib/postgresql/data
+    networks:
+      guacdb:
+
+# end guacamole databases
+##############################################################################
+
+
 volumes:
-  db_data:
+  db_data-previous:
+    driver: local
+  db_data-new:
+    driver: local
+  db_data-git:
     driver: local
 
 networks:
-  guacnetwork:
+  guacnetwork-previous:
+  guacnetwork-new:
+  guacnetwork-git:
   guacdb:
