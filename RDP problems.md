@@ -1,11 +1,13 @@
 # RDP problem
 
-Error 
+Below is the fatal error that affected communication with our older systems:
+
 ```
 OpaqueRect - SERVER BUG: The support for this feature was not announced! Use /relax-order-checks to ignore
 ```
 
-This suggests that the RDP service on older systems doesn't support 'OpaqueRect' feature, while the new clients expect it.
+This error indicates that 'OpaqueRect' order was **not** part of the initial negotiation between the guacd rdp client and the xrdp server, but nonetheless was sent by the server. FreeRDP changed the default behavior of the client, and it no longer accepts such orders.
+
 
 
 'RDP support for Guacamole is provided by the libguac-client-rdp library, which will be installed as part of guacamole-server if the required dependencies are present during the build.'
@@ -44,7 +46,7 @@ And relevant tidbit from gucacamole's code, in `guacamole-server/src/protocols/r
 Which would imply we need to pass `HAVE_RDPSETTINGS_ALLOWUNANOUNCEDORDERSFROMSERVER` to the pre-processor.
 
 
-Additional info: 
+Additional info:
 
 https://issues.apache.org/jira/browse/GUACAMOLE-962
 
