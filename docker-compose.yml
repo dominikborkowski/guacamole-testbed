@@ -82,6 +82,7 @@ services:
       - "127.0.0.1:8081:8080"
     restart: unless-stopped
     environment:
+      GUACD_LOG_LEVEL: debug
       GUACD_HOSTNAME: guacd-new
       POSTGRES_HOSTNAME: postgres-new
       POSTGRES_DATABASE: ${POSTGRES_DB:-guac_db}
